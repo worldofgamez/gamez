@@ -1,0 +1,313 @@
+.clear {
+  clear: both;
+}
+
+body {
+  background-color: #d9d9d9;
+  position: relative;
+  ## padding-bottom: 100px;
+  color: gray;
+}
+
+.loading {
+  display: block;
+  margin: 150px auto;
+  height: 70px;
+}
+
+.container{
+  margin: 0 20px;
+}
+
+.clear-points {
+  margin: 0;
+  padding: 0;
+}
+
+.unfloat {
+  float: none;
+}
+
+.main {
+  background-color: #aeaeae;
+  color: whitesmoke;
+}
+
+.fnt-sec, .fnt-sec li a {
+  color: gray;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-size: 1.3em;
+}
+
+.info-text {
+  text-align: center;
+  color: whitesmoke;
+}
+
+.center {
+  text-align: center;
+}
+
+.sections {
+  margin-bottom: 40px;
+}
+
+.info-section {
+  background-color: #7b7d7f;
+}
+
+/* Helper class that just adds some left and right space */
+.some-room {
+  margin: 40px 0;
+}
+
+.row {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-border {
+  padding-bottom: 20px;
+  border: 5px solid #7b7d7f;
+  border-radius: 5px;
+}
+
+/* This directly targets the logo's img tag */
+#logo {
+  height: 40px;
+  # padding-top: 10px;
+  padding-bottom: 5px;
+  # padding-left: -20px;
+  # display: block;
+  margin: 0 auto;
+}
+
+.dc-navbar {
+  # height: 70px;
+  background-color: whitesmoke;
+}
+
+.dc-navbutton {
+  # margin-top: 90px;
+  border-color: darkgray;
+}
+
+.login {
+  margin-top: 30px;
+  float: right;
+  position: absolute;
+  top: 5px;
+  right: 50px;
+}
+
+.login-dropdown {
+  width: 300px;
+}
+
+.login-dropdown-static {
+  padding: 10px;
+  ## width: 300px;
+}
+
+#login-dropdown-submit {
+  margin-right: 10px;
+}
+
+.login-dropdown-group {
+  ## margin-left: 400px;
+  margin-bottom: 20px;
+}
+
+.navbar-top {
+  # float: left;
+}
+
+.navbar-bottom {
+  float: left;
+}
+
+.navbar .navbar-nav {
+  display: inline-block;
+  float: none;
+  vertical-align: top;
+}
+
+.navbar .navbar-collapse {
+  # text-align: center;
+}
+
+.footer {
+  border-top: 3px solid black;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: whitesmoke;
+  position: fixed;
+  bottom: 0;
+}
+
+.footer li a {
+  padding-top: 0;
+}
+
+.footer p {
+  color: black;
+}
+
+.footer .container {
+  padding-top: 15px;
+  display: table;
+  vertical-align: middle;
+}
+
+.float-left {
+  float: left;
+}
+
+.copyright {
+  position: absolute;
+  right: 20px;
+  color: aliceblue;
+}
+
+.tag-line {
+  padding: 35px 0 0 10px;
+  float: right;
+}
+
+.toggle-bar {
+  background-color: black;
+}
+
+.bar-place {
+  margin-left: 100px;
+}
+
+.dc-navlist ul {
+  position: relative;
+  padding-top: 50px;
+}
+
+.nav-pad li a {
+  margin-top: 60px;
+}
+
+#errors {
+  color: red;
+  list-style-type: none;
+  margin-bottom: 30px;
+}
+
+#errors li {
+  text-align: center;
+  margin: 0 auto;
+}
+#errors-header {
+  font-weight: bold;
+}
+
+.form-bottom-text {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  margin-left: -14px;
+}
+
+.form-button {
+  margin-left: -14px;
+}
+
+/* CSS for notification test button */
+
+#notify-wrapper {
+  text-align: center;
+}
+
+#notification {
+  display: table;
+  margin: 0 auto;
+  margin-bottom: 18px;
+}
+
+#error-notification {
+  color: #00C677;
+  padding: 10px;
+  position: fixed;
+  top: 20px;
+  right: 10px;
+  width: 300px;
+  background: rgba(50,50,50,.7);
+  border-radius: 10px;
+  z-index: 1000;
+  display: none;
+}
+
+#error-notification #error-lead {
+  font-weight: 400;
+  margin-left: 20px;
+}
+
+#error-notification ul {
+  font-weight: 200;
+  letter-spacing: 1px;
+  list-style-type: none;
+}
+
+/* end notifications */
+
+@media screen and (max-width: 991px) {
+  .form-bottom-text {
+    margin-top: 0;
+  }
+}
+
+@media screen and (max-width: 776px) {
+  .navbar-header {
+    float: left;
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+
+  .navbar-collapse {
+    border-top: 1px solid transparent;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .navbar-collapse.collapse {
+    display: none!important;
+  }
+
+  .navbar-nav {
+    float: none!important;
+    margin: 7.5px -15px;
+  }
+
+  .navbar-nav > li {
+    float: none;
+  }
+
+  .navbar-nav > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .navbar-text {
+    float: none;
+    margin: 15px 0;
+  }
+
+  .navbar-collapse.collapse.in {
+    display: block!important;
+  }
+
+  .collapsing {
+    overflow: hidden!important;
+  }
+}
