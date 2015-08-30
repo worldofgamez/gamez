@@ -79,6 +79,15 @@ and passed to the function (in a future). The function returns
 
 (def dconn
   "The Datomic connection"
-  (do
-    (d/create-database (d-url))
-    (d/connect (d-url))))
+  (delay
+    (do
+      (d/create-database (d-url))
+      (d/connect (d-url)))))
+
+      (defn dconn2
+        "The Datomic connection"
+        []
+
+          (do
+            ;; (d/create-database (d-url))
+            (d/connect (d-url))))
