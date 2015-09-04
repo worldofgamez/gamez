@@ -22,4 +22,8 @@ mv datomic-free* datomic
 
 cat datomic/config/samples/free-transactor-template.properties | sed "s/host=localhost/host=0.0.0.0/" > datomic/free-transactor.properties
 
-docker build --tag=wog/datomic .
+echo "data-dir=/data/data" >> datomic/free-transactor.properties
+
+echo "log-dir=/data/logs" >> datomic/free-transactor.properties
+
+docker build --tag=gamez/datomic .
