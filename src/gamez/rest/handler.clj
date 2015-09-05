@@ -1,4 +1,4 @@
-(ns wog.rest.handler
+(ns gamez.rest.handler
   (:require [compojure.core :refer [GET defroutes]]
             [compojure.route :refer [not-found resources]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
@@ -6,7 +6,7 @@
             [hiccup.core :refer [html]]
             [hiccup.page :refer [include-js include-css]]
             [prone.middleware :refer [wrap-exceptions]]
-            [wog.model.db :as db]
+            [gamez.model.db :as db]
             [ring.middleware.reload :refer [wrap-reload]]
             [org.httpkit.server :as kit]
             [dragonmark.util.props :as dp]
@@ -49,7 +49,7 @@
     [:body
      [:div#app
       "Howdy!"
-      [:div#wog_content]
+      [:div#gamez_content]
       [:div "After the content DIV"]
       ]
      ]]))
@@ -74,7 +74,7 @@
                 (db/rbind-atom g s)
 
                 (kit/send! channel
-                           (json/write-str
+                           (db/transit-encode
                             {:cmd "setGuid",
                              :data g}))
                 [g s]))]
@@ -86,13 +86,13 @@
         (kit/on-receive
          channel
          (fn [data]
-           (let [to-do (json/read-str data
-                                      :bigdec true
-                                      :key-fn keyword)]
-             (some-> to-do :cmd @commands
+           (let [to-do (db/transit-decode data)
+                 the-cmds @commands]
+             (println "Got " (pr-str to-do))
+             (some-> to-do :cmd the-cmds
                      (apply [(:data to-do)
                              guid-info
-                             (fn [x] (kit/send! channel (json/write-str x)))
+                             (fn [x] (kit/send! channel (db/transit-encode x)))
                              guid])))))))))
 
 (defn- fix-body
@@ -101,10 +101,10 @@
     (assoc
      resp
      :body
-     (clojure.string/replace body #"</body>"
-                             (str "<script type='text/javascript'>\nantiforgery = '"
+     (clojure.string/replace body #"<body>"
+                             (str "<body>\n<script type='text/javascript'>\nantiforgery = '"
                                   (fix-binding ring.middleware.anti-forgery/*anti-forgery-token*)
-                                  "';\n</script>\n</body>")))))
+                                  "';\n</script>\n")))))
 
 
 (defroutes routes
@@ -114,6 +114,7 @@
          (let [resource-path "public/index.html"
                ret (resource-response resource-path)
                ret (fix-body ret)
+               ret (assoc-in ret [:header "Content-Length"] (count (:body ret)))
                ret (assoc-in ret [:headers "Content-Type"] "text/html; utf-8")
                ret (assoc-in ret [:headers "Last-Modified"] "")]
 

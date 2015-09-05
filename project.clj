@@ -1,10 +1,10 @@
-(defproject wog "0.1.0-SNAPSHOT"
+(defproject gamez "0.1.0-SNAPSHOT"
   :description "World of GameZ core server"
   :url "http://worldofgamez.org"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :source-paths ["src/clj" "src/cljs"]
+  :source-paths ["src"]
 
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.48" :scope "provided"]
@@ -54,14 +54,14 @@
   :plugins [[lein-environ "1.0.0"]
             [lein-asset-minifier "0.2.2"]]
 
-  :ring {:handler wog.rest.handler/app
-         :uberwar-name "wog.war"}
+  :ring {:handler gamez.rest.handler/app
+         :uberwar-name "gamez.war"}
 
   :min-lein-version "2.5.0"
 
-  :uberjar-name "wog.jar"
+  :uberjar-name "gamez.jar"
 
-  :main wog.server
+  :main gamez.rest.server
 
   :clean-targets ^{:protect false} [:target-path
                                     [:cljsbuild :builds :app :compiler :output-dir]
@@ -71,14 +71,14 @@
   {:assets
     {"resources/public/css/site.min.css" "resources/public/css/site.css"}}
 
-  :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
+  :cljsbuild {:builds {:app {:source-paths ["src"]
                              :compiler {:output-to     "resources/public/js/app.js"
                                         :output-dir    "resources/public/js/out"
                                         :asset-path   "js/out"
                                         :optimizations :none
                                         :pretty-print  true}}}}
 
-  :profiles {:dev {:repl-options {:init-ns wog.repl
+  :profiles {:dev {:repl-options {:init-ns gamez.repl
                                   :nrepl-middleware []}
 
                    :dependencies [[ring/ring-mock "0.2.0"]
@@ -98,12 +98,12 @@
                               :server-port 3449
                               :nrepl-port 7002
                               :css-dirs ["resources/public/css"]
-                              :ring-handler wog.rest.handler/app}
+                              :ring-handler gamez.rest.handler/app}
 
                    :env {:dev true}
 
                    :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
-                                              :compiler {:main "wog.dev"
+                                              :compiler {:main "gamez.dev"
                                                          :source-map true}}
 }
 }}

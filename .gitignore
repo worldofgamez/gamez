@@ -11,3 +11,8 @@ pom.xml.asc
 /out
 /.repl
 *.log
+
+*~
+
+/.idea/*
+*.iml

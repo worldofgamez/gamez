@@ -1,4 +1,4 @@
-(ns wog.model.db
+(ns gamez.model.db
   (:require
    [cognitect.transit :as t]
    [datomic.api :only [q db] :as d]

@@ -1,5 +1,5 @@
-(ns wog.rest.server
-  (:require [wog.handler :refer [app]]
+(ns gamez.rest.server
+  (:require [gamez.rest.handler :refer [app]]
             [environ.core :refer [env]]
             [ring.adapter.jetty :refer [run-jetty]])
   (:gen-class))

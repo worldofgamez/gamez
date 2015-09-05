@@ -1,0 +1,5 @@
+{
+:redis {:pool {} :spec {:host "redis" :port 6379}}
+:datomic {:url "datomic:free://localhost:4334/wog"}
+:other {:stuff true}
+}

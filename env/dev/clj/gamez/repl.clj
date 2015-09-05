@@ -1,5 +1,5 @@
-(ns wog.repl
-  (:use wog.rest.handler
+(ns gamez.repl
+  (:use gamez.rest.handler
         [org.httpkit.server :refer :all]
         [ring.middleware file-info file]))
 

@@ -1,5 +1,5 @@
-(ns wog.prod
-  (:require [wog.core :as core]))
+(ns gamez.prod
+  (:require [gamez.core :as core]))
 
 ;;ignore println statements in prod
 (set! *print-fn* (fn [& _]))

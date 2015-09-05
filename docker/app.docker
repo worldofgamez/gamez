@@ -1,0 +1,12 @@
+FROM java:8
+
+RUN apt-get update
+
+RUN apt-get install -y zip
+
+ADD gamez.jar /gamez.jar
+ADD the_prod.props /data/default.props
+
+EXPOSE 3000
+
+ENTRYPOINT ["java", "-Drun.mode=prod", "-jar", "/gamez.jar"]
