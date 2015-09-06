@@ -1,7 +1,6 @@
 (ns gamez.model.db
   (:require
    [cognitect.transit :as t]
-   [datomic.api :only [q db] :as d]
    [dragonmark.util.props :as dp]
    [taoensso.carmine :as car :refer (wcar)])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream]))
@@ -72,22 +71,3 @@ and passed to the function (in a future). The function returns
                  (wcar*
                   (car/set key new-state))))))
 
-(defn d-url
-  "The Datomic URL"
-  []
-  (-> @dp/info :datomic :url))
-
-(def dconn
-  "The Datomic connection"
-  (delay
-    (do
-      (d/create-database (d-url))
-      (d/connect (d-url)))))
-
-      (defn dconn2
-        "The Datomic connection"
-        []
-
-          (do
-            ;; (d/create-database (d-url))
-            (d/connect (d-url))))

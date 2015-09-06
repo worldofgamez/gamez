@@ -1,5 +1,5 @@
 (ns ^:figwheel-no-load gamez.dev
-    (:require [gamez.core :as core]
+    (:require [gamez.client.core :as core]
               [figwheel.client :as figwheel :include-macros true]))
 
 (enable-console-print!)

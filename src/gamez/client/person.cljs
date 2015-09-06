@@ -1,0 +1,1 @@
+(ns gamez.client.person)

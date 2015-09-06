@@ -33,8 +33,6 @@
                  [com.cognitect/transit-cljs "0.8.220"]
                  [com.cognitect/transit-java "0.8.290"]
 
-                 [com.datomic/datomic-free "0.9.5206"]
-
                  [ragtime "0.3.8"]
 
                  [ring-server "0.4.0"]

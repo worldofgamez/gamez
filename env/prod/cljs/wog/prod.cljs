@@ -1,5 +1,5 @@
 (ns gamez.prod
-  (:require [gamez.core :as core]))
+  (:require [gamez.client.core :as core]))
 
 ;;ignore println statements in prod
 (set! *print-fn* (fn [& _]))

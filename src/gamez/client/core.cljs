@@ -1,9 +1,11 @@
-(ns gamez.core
+(ns gamez.client.core
     (:require [reagent.core :as reagent :refer [atom]]
               [reagent.session :as session]
               [secretary.core :as secretary :include-macros true]
               [goog.events :as events]
               [cognitect.transit :as t]
+              [gamez.client.person :as gp]
+              [gamez.util.shared :as us]
               [goog.history.EventType :as EventType])
     (:import goog.History))
 
@@ -64,9 +66,11 @@
              }]
     ret))
 
-(def cmd-dispatch (atom {}))
-
 (def socket-guid (atom "yo"))
+
+(def set-guid #(reset! socket-guid %))
+
+(def cmd-dispatch (atom {"setGuid" set-guid}))
 
 (def current-socket (atom nil))
 
@@ -88,6 +92,7 @@
   (let [msg (transit-decode (.-data event))
         cmd (:cmd msg)
         dispatch (@cmd-dispatch cmd)]
+    (.log js/console (pr-str msg))
     (when dispatch
       (when (= "$" (.substring cmd 0 1))
         (swap! cmd-dispatch dissoc cmd))
@@ -111,8 +116,10 @@
                                    (:host page-info)
                                    "/api/1/socket/"
                                    @socket-guid))]
+    (.log js/console "Yo!")
     (aset socket "onopen"
           (fn []
+            (.log js/console "open")
             (reset! anti-forge js/antiforgery)
             (reset! current-socket socket)
             (send-msg {:cmd "hello" :data (js/Date.)})
@@ -121,9 +128,9 @@
 
     (aset socket "onclose"
           (fn []
+            (.log js/console "Closed")
             (reset! current-socket nil)
-            (connect-socket)
-            ))
+            (connect-socket)))
 
     (aset socket "onmessage"
           got-message)
