@@ -2,6 +2,9 @@
   (:require
    [cognitect.transit :as t]
    [dragonmark.util.props :as dp]
+   [clj-postgresql.core :as pg]
+   [clojure.java.jdbc :as jdbc]
+
    [taoensso.carmine :as car :refer (wcar)])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream]))
 
@@ -71,3 +74,24 @@ and passed to the function (in a future). The function returns
                  (wcar*
                   (car/set key new-state))))))
 
+
+;; The database connection
+(def db
+  (delay
+    (let [config (:db @dp/info)
+          ret
+          (pg/pool :host (:host config)
+                   :dbname (:dbname config)
+                   :port (:port config)
+                   :user (:user config)
+                   :password (:password config))
+          ]
+
+      ret)))
+
+(defn md []
+  (jdbc/with-db-metadata
+    [meta @db]
+    (.getTables meta nil nil nil (into-array String ["foo"])
+                )
+    :row-fn (fn [& x] (println "row " (pr-str x)))))

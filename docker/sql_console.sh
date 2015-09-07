@@ -2,4 +2,4 @@
 
 # Start psql and connect to the DB
 
-docker run -ti --rm --link wog_db postgres:latest psql -h wog_db -U postgres
+rlwrap docker run -ti --rm --link gamez_db postgres:latest psql -h gamez_db -U postgres
