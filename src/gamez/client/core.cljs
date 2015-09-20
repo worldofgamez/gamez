@@ -1,63 +1,129 @@
 (ns gamez.client.core
-    (:require [reagent.core :as reagent :refer [atom]]
-              [reagent.session :as session]
-              [secretary.core :as secretary :include-macros true]
-              [goog.events :as events]
-              [cognitect.transit :as t]
-              [gamez.client.person :as gp]
-              [gamez.util.shared :as us]
-              [goog.history.EventType :as EventType])
-    (:import goog.History))
+  (:require [reagent.core :as reagent :refer [atom]]
+            [reagent.session :as session]
+            [dragonmark.inputs.core :as dim]
+            [schema.core :as s]
+            [cognitect.transit :as t]
+            [secretary.core :as secretary :include-macros true]
+            [goog.events :as events]
+            [accountant.core :as accountant]
+            [goog.history.EventType :as EventType])
+  (:import goog.History))
 
 ;; -------------------------
 ;; Views
 
+(declare href)
+
 (defn home-page []
-  [:div
-   [:h2 "Your GameZ"]
-
-
-   [:div.row
-    [:div.col-md-2 {:style {:box-shadow "0 0 30px black"}} "Yak"]
-    [:div.col-md-1]
-    [:div.col-md-2 {:style {:box-shadow "0 0 30px black"}} "Yak"]
-    [:div.col-md-1]
-    [:div.col-md-2 {:style {:box-shadow "0 0 30px black"}} "Yak"]
-    [:div.col-md-1]
-    [:div.col-md-2 {:style {:box-shadow "0 0 30px black"}} "Yak"]
-    ]
+  [:div [:h2 "Welcome to World of GameZ"]
+   [:div (href ::story-page)]
+   [:div (href ::signup)]
    ])
 
 (defn story-page []
-  [:div
-   [:h2 "About World of GameZ"]
-   "World of GameZ was founded when Daniel and Sophia's evil parents..."
-   ])
+  [:div [:h2 "About Gamez"]
+   [:div [:a {:href "/"} "go to the home page"]]])
+
+(defn ten-year-old
+  []
+  (-> (.now js/Date) (- (* 1000 365 24 60 60 10)) (js/Date.)))
+
+(defn signup []
+  (let [c (dim/make-input-comp
+            :sign_up
+            {:email  s/Str
+             :name s/Str
+             :birthday s/Inst
+             :password s/Str}
+            #(.log js/console (pr-str %))
+            {:order       [:name :email :password :birthday]
+             :email       {:type "email"}
+
+             :password    {:type "password"}
+             :validations [[:before (ten-year-old) :birthday]
+                           [:min-length 8 :password]
+                           [:email :email]]}
+            )]
+    [:div "Sign up"
+     [:h2 [c]]
+     ]))
+
+
 
 (defn current-page []
   [:div [(session/get :current-page)]])
 
 ;; -------------------------
 ;; Routes
-(secretary/set-config! :prefix "#")
+;; (secretary/set-config! :prefix "#")
 
-(secretary/defroute "/" []
-  (session/put! :current-page #'home-page))
+(defonce main-state (atom {}))
 
-(secretary/defroute "/story" []
-  (session/put! :current-page #'story-page))
+(def pages (atom {}))
 
-;; -------------------------
+(defn route-from
+  [item]
+  (->> item keys (filter string?) first))
+
+(defn href
+  [where]
+  (let [w (@pages where)]
+    (if (and  w ((or (:when w) #(-> true)))) [:a {:href (route-from w)} (or (:name w) (route-from w))]
+                                             "")))
+
+(def routes
+  [{"/" #'home-page :name "Home"}
+   {"/t/story" #'story-page :name "Our Story"}
+   {"/t/signup" #'signup :name "Sign Up"
+    :when #(-> @main-state :logged-in not)}
+   {"/t/*" #'home-page :name "Go Home" :when #(-> false)}])
+
+(defn build-secretary-routes
+  [{:keys [kids] :as item}]
+  (let [route (route-from item)
+        page (item route)
+        kw (-> page .-sym keyword)
+        legal (or (:when item) #(-> true))]
+    (swap! pages assoc kw item)
+    (doseq [k kids] (build-secretary-routes k))
+    (secretary/add-route!
+      route
+      (fn [& _]
+        (if (legal)
+          (session/put! :current-page page)
+          (do
+            (-> js/window .-history (.pushState nil "Home" "/"))
+            (secretary/dispatch! "/")))))))
+
+(mapv build-secretary-routes routes)
+
 ;; History
 ;; must be called after routes have been defined
 (defn hook-browser-navigation! []
   (doto (History.)
     (events/listen
-     EventType/NAVIGATE
-     (fn [event]
-       (secretary/dispatch! (.-token event))))
+      EventType/NAVIGATE
+      (fn [event]
+        (secretary/dispatch! (.-token event))))
     (.setEnabled true)))
 
+(accountant/configure-navigation!)
+
+;; -------------------------
+;; Initialize app
+(defn mount-root []
+  (reagent/render [current-page] (.getElementById js/document "app")))
+
+(defn init! []
+  (hook-browser-navigation!)
+  (mount-root))
+
+(js/setTimeout
+  #(let [path (-> js/window .-location .-pathname)]
+    (secretary.core/dispatch! path))
+  50
+  )
 (def page-info
   (let [loc (.-location js/window)
         ret {:host (.-host loc)
@@ -139,11 +205,4 @@
 
 (js/setTimeout connect-socket 50)
 
-;; -------------------------
-;; Initialize app
-(defn mount-root []
-  (reagent/render [current-page] (.getElementById js/document "app")))
 
-(defn init! []
-  (hook-browser-navigation!)
-  (mount-root))

@@ -12,28 +12,22 @@
                  [com.fasterxml.jackson.core/jackson-core "2.5.4"]
                  [com.fasterxml.jackson.core/jackson-annotations "2.5.0"]
                  [commons-logging "1.1.3"]
-                 [org.clojure/tools.logging "0.3.1"]
-                 [crypto-password "0.1.3"]
-                 [dragonmark/util "0.1.3" :exclusions [org.clojure/clojure]]
+
                  [org.apache.httpcomponents/httpclient "4.3.5"]
-                 [org.slf4j/slf4j-simple "1.7.12"]
-                 [clj-postgresql "0.4.0"]
+                 [org.slf4j/slf4j-jdk14 "1.7.12"]
+
+                 [dragonmark/data "0.1.2"]
+                 [dragonmark/inputs "0.4.0"]
+
                  [com.cemerick/url "0.1.1"]
-                 [org.clojure/java.jdbc "0.3.7"]
-                 [jdbc-ring-session "0.3"]
+
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  ;; dependency related
                  [prismatic/schema "0.4.3"]
                  [commons-codec "1.10"]
                  [prismatic/plumbing "0.4.4"]
-                 [com.taoensso/carmine "2.11.1"]
-                 [org.bitbucket.b_c/jose4j "0.4.4"]
 
-                 [com.cognitect/transit-clj "0.8.275"]
-                 [com.cognitect/transit-cljs "0.8.220"]
-                 [com.cognitect/transit-java "0.8.290"]
-
-                 [ragtime "0.3.8"]
+                 [venantius/accountant "0.1.1"]
 
                  [ring-server "0.4.0"]
                  [cljsjs/react "0.13.3-1"]
@@ -42,6 +36,7 @@
                  [reagent-utils "0.1.5"]
                  [ring "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
+                 [ring-rewrite "0.1.0"]
                  [prone "0.8.2"]
                  [compojure "1.4.0"]
                  [hiccup "1.0.5"]
@@ -72,7 +67,7 @@
   :cljsbuild {:builds {:app {:source-paths ["src"]
                              :compiler {:output-to     "resources/public/js/app.js"
                                         :output-dir    "resources/public/js/out"
-                                        :asset-path   "js/out"
+                                        :asset-path   "/js/out"
                                         :optimizations :none
                                         :pretty-print  true}}}}
 

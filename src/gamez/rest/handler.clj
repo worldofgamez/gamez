@@ -7,6 +7,8 @@
             [hiccup.page :refer [include-js include-css]]
             [prone.middleware :refer [wrap-exceptions]]
             [gamez.model.db :as db]
+            [dragonmark.data :as dd]
+            [gamez.util.shared :as gus]
             [ring.middleware.reload :refer [wrap-reload]]
             [org.httpkit.server :as kit]
             [dragonmark.util.props :as dp]
@@ -75,7 +77,6 @@
               (let [to-do (db/transit-decode data)
                     the-cmds @commands]
                 (when (= token (:anti-forge to-do))
-                  (println "Got " (pr-str to-do) " session " session)
                   (some-> to-do :cmd the-cmds
                           (apply [(:data to-do)
                                   guid-info
@@ -96,18 +97,20 @@
                                    "';\n</script>\n")))))
 
 
-(defroutes routes
-           (GET "/"
-                []
-             (fn [_]
-               (let [resource-path "public/index.html"
-                     ret (resource-response resource-path)
-                     ret (fix-body ret)
-                     ret (assoc-in ret [:headers "Content-Length"] (str (count (:body ret))))
-                     ret (assoc-in ret [:headers "Content-Type"] "text/html; utf-8")
-                     ret (assoc-in ret [:headers "Last-Modified"] "")]
+(defn serve-index [req]
+  (let [resource-path "public/index.html"
+        ret (resource-response resource-path)
+        ret (fix-body ret)
+        ret (-> ret
+                (assoc-in [:headers "Content-Length"] (str (count (:body ret))))
+                (assoc-in [:headers "Content-Type"] "text/html; utf-8")
+                (assoc-in [:headers "Last-Modified"] ""))]
 
-                 ret)))
+    ret))
+
+(defroutes routes
+           (GET "/"  [] serve-index)
+           (GET "/t/*"  [] serve-index)
 
            (GET "/api/1/socket/:guid" [guid]
              (fn [req] (do-socket req guid)))
@@ -116,5 +119,14 @@
            (not-found "Not Found"))
 
 (def app
-  (let [handler (wrap-defaults #'routes site-defaults)]
+  (let [handler (-> #'routes
+                    (wrap-defaults
+                      (->
+                        site-defaults
+                        gus/extra-security
+                        (assoc-in [:session :store] (gus/redis-sessions))))
+
+                    dd/build-transaction-middleware
+                    )]
     (if (env :dev) (-> handler wrap-exceptions wrap-reload) handler)))
+
